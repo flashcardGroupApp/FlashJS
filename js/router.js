@@ -67,23 +67,23 @@ setHeader(){
       }
     });
 
-    // $('.app').html('loading...');
+    $('.app').html('loading...');
 
-    // request.then((data) => {
+    request.then((data) => {
 
-    //   console.log('data:', data);
+      console.log('data:', data);
 
-    //   Cookies.set('username', data);
+      Cookies.set('username', data);
 
-    //   $.ajaxSetup({
-    //     headers: {
-    //       auth_token: data.auth_token
-    //     }
-    //   });
-   //    this.redirect('dashboard');
-   //  }).fail(() => {
-   //    $('.app').html(' Wrong email or password. Please, try again.');
-   //  });
+      $.ajaxSetup({
+        headers: {
+          auth_token: data.auth_token
+        }
+      });
+      this.redirect('dashboard');
+    }).fail(() => {
+      $('.app').html(' Wrong email or password. Please, try again.');
+    });
    },
 
 
@@ -109,8 +109,12 @@ setHeader(){
     this.board.fetch().then(() => {
       this.render(
         <DashboardTemplate
-        data={this.board.toJSON()}/>,
-      // document.querySelector('.app')
+        data={this.board.toJSON()}
+        onLogoutClick={()=> this.logout()}
+        onSpanClick={()=> this.redirect('deck')}
+        onDeleteClick={()=> }
+        onAddClick={()=> }/>,
+      document.querySelector('.app')
         );
     });
 

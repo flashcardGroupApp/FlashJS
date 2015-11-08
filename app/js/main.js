@@ -159,6 +159,8 @@ exports['default'] = _backbone2['default'].Router.extend({
   },
 
   login: function login() {
+    var _this = this;
+
     var username = document.querySelector('.username').value;
     var password = document.querySelector('.password').value;
 
@@ -172,23 +174,23 @@ exports['default'] = _backbone2['default'].Router.extend({
       }
     });
 
-    // $('.app').html('loading...');
+    (0, _jquery2['default'])('.app').html('loading...');
 
-    // request.then((data) => {
+    request.then(function (data) {
 
-    //   console.log('data:', data);
+      console.log('data:', data);
 
-    //   Cookies.set('username', data);
+      _jsCookie2['default'].set('username', data);
 
-    //   $.ajaxSetup({
-    //     headers: {
-    //       auth_token: data.auth_token
-    //     }
-    //   });
-    //    this.redirect('dashboard');
-    //  }).fail(() => {
-    //    $('.app').html(' Wrong email or password. Please, try again.');
-    //  });
+      _jquery2['default'].ajaxSetup({
+        headers: {
+          auth_token: data.auth_token
+        }
+      });
+      _this.redirect('dashboard');
+    }).fail(function () {
+      (0, _jquery2['default'])('.app').html(' Wrong email or password. Please, try again.');
+    });
   },
 
   logout: function logout() {
@@ -202,20 +204,20 @@ exports['default'] = _backbone2['default'].Router.extend({
   },
 
   homeView: function homeView() {
-    var _this = this;
+    var _this2 = this;
 
     _reactDom2['default'].render(_react2['default'].createElement(_viewsLogin2['default'], {
       onLoginClick: function () {
-        return _this.login();
+        return _this2.login();
       } }), document.querySelector('.app'));
   },
   dashboard: function dashboard() {
-    var _this2 = this;
+    var _this3 = this;
 
     this.setHeader();
     this.board.fetch().then(function () {
-      _this2.render(_react2['default'].createElement(_viewsDashboard2['default'], {
-        data: _this2.board.toJSON() }));
+      _this3.render(_react2['default'].createElement(_viewsDashboard2['default'], {
+        data: _this3.board.toJSON() }));
     });
   }
 });
@@ -355,6 +357,11 @@ exports['default'] = _react2['default'].createClass({
     console.log("deck handler works");
   },
 
+  logoutHandler: function logoutHandler() {
+    this.props.onLogoutClick();
+    console.log("logout works");
+  },
+
   //NEED TO FINISH
   deleteHandler: function deleteHandler(id) {
     this.props.onDeleteClick(id);
@@ -401,41 +408,37 @@ exports['default'] = _react2['default'].createClass({
         { className: 'your-decks' },
         'Your Current Decks'
       ),
-      '// ',
+      _react2['default'].createElement(
+        'button',
+        { className: 'logout', onClick: function () {
+            return _this2.logoutHandler();
+          } },
+        'Logout'
+      ),
       _react2['default'].createElement(
         'div',
         { className: 'decks' },
-        '//   ',
         _react2['default'].createElement(
           'ul',
           { className: 'decks-list' },
-          '//     ',
           this.props.data.map.getDeck,
-          '//     ',
           _react2['default'].createElement(
             'li',
             { className: 'create-deck' },
-            '//       ',
             _react2['default'].createElement(
               'form',
               { className: 'new-deck-form' },
-              '//         ',
-              _react2['default'].createElement('input', { className: 'new-deck-name', placeholder: 'Create a New Deck' }),
-              '//       '
+              _react2['default'].createElement('input', { className: 'new-deck-name', placeholder: 'Create a New Deck' })
             ),
-            '//       ',
             _react2['default'].createElement(
               'button',
               { className: 'new-deck-button', onClick: function () {
                   return _this2.addHandler(data.id);
                 } },
               '+'
-            ),
-            '//     '
-          ),
-          '//   '
-        ),
-        '// '
+            )
+          )
+        )
       )
     );
   }
