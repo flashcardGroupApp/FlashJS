@@ -33,7 +33,7 @@ export default React.createClass({
 		          <input type="text" className="username" id="username" placeholder="Username" />
 		        </div>
 		        <div className="form-group">
-		          <label htmlFor="password">Password: </label>
+		          <label htmlFor="password">Password:  </label>
 		          <input type="password" className="password" id="password" ref="password" placeholder="Password" />
 		        </div>
 	        <button type="submit" onClick={this.submitHandler}className="btn btn-default">Login</button>

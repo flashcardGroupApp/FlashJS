@@ -30,6 +30,22 @@ initialize: function(appElement) {
 		Backbone.history.start();
 	},
 
+setHeader(){
+    let user = Cookies.get('user');
+    console.log(user);
+    if (user) {
+      let auth = JSON.parse(user).user.access_token;
+      console.log(auth);
+      $.ajaxSetup({
+        headers: {
+          auth_token: data.auth_token
+        }
+      });
+       this.redirect('dashboard');
+    }else {
+      $('.app').html(' Wrong email or password. Please, try again.')
+  };
+},
 	redirect(route) {
 		this.navigate(route, {
 			trigger: true,
@@ -51,33 +67,23 @@ initialize: function(appElement) {
       }
     });
 
-    $('.app').html('loading...');
+    // $('.app').html('loading...');
 
-    request.then((data) => {
+    // request.then((data) => {
 
-      console.log('data:', data);
+    //   console.log('data:', data);
 
-      Cookies.set('username', data);
+    //   Cookies.set('username', data);
 
-      $.ajaxSetup({
-        headers: {
-          auth_token: data.auth_token
-        }
-      });
-      this.redirect('dashboard');
-    }).fail(() => {
-      $('.app').html(' Wrong email or password. Please, try again.');
-    });
-   },
-
-   setHeader(){
-    Cookies.set('username', data);
-    $.ajaxSetup({
-        headers: {
-          auth_token: data.auth_token
-        }
-      });
-
+    //   $.ajaxSetup({
+    //     headers: {
+    //       auth_token: data.auth_token
+    //     }
+    //   });
+   //    this.redirect('dashboard');
+   //  }).fail(() => {
+   //    $('.app').html(' Wrong email or password. Please, try again.');
+   //  });
    },
 
 
@@ -95,7 +101,6 @@ initialize: function(appElement) {
 		ReactDom.render(
 			<LoginTemplate
 				onLoginClick={() => this.login()}/>,
-				// onLogoutClick={() => this.logout()}/>,
 		document.querySelector('.app')
 			);
 	},
@@ -105,7 +110,7 @@ initialize: function(appElement) {
       this.render(
         <DashboardTemplate
         data={this.board.toJSON()}/>,
-      document.querySelector('.app')
+      // document.querySelector('.app')
         );
     });
 

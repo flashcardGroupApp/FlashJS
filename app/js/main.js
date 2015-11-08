@@ -135,6 +135,22 @@ exports['default'] = _backbone2['default'].Router.extend({
     _backbone2['default'].history.start();
   },
 
+  setHeader: function setHeader() {
+    var user = _jsCookie2['default'].get('user');
+    console.log(user);
+    if (user) {
+      var auth = JSON.parse(user).user.access_token;
+      console.log(auth);
+      _jquery2['default'].ajaxSetup({
+        headers: {
+          auth_token: data.auth_token
+        }
+      });
+      this.redirect('dashboard');
+    } else {
+      (0, _jquery2['default'])('.app').html(' Wrong email or password. Please, try again.');
+    };
+  },
   redirect: function redirect(route) {
     this.navigate(route, {
       trigger: true,
@@ -143,8 +159,6 @@ exports['default'] = _backbone2['default'].Router.extend({
   },
 
   login: function login() {
-    var _this = this;
-
     var username = document.querySelector('.username').value;
     var password = document.querySelector('.password').value;
 
@@ -158,32 +172,23 @@ exports['default'] = _backbone2['default'].Router.extend({
       }
     });
 
-    (0, _jquery2['default'])('.app').html('loading...');
+    // $('.app').html('loading...');
 
-    request.then(function (data) {
+    // request.then((data) => {
 
-      console.log('data:', data);
+    //   console.log('data:', data);
 
-      _jsCookie2['default'].set('username', data);
+    //   Cookies.set('username', data);
 
-      _jquery2['default'].ajaxSetup({
-        headers: {
-          auth_token: data.auth_token
-        }
-      });
-      _this.redirect('dashboard');
-    }).fail(function () {
-      (0, _jquery2['default'])('.app').html(' Wrong email or password. Please, try again.');
-    });
-  },
-
-  setHeader: function setHeader() {
-    _jsCookie2['default'].set('username', data);
-    _jquery2['default'].ajaxSetup({
-      headers: {
-        auth_token: data.auth_token
-      }
-    });
+    //   $.ajaxSetup({
+    //     headers: {
+    //       auth_token: data.auth_token
+    //     }
+    //   });
+    //    this.redirect('dashboard');
+    //  }).fail(() => {
+    //    $('.app').html(' Wrong email or password. Please, try again.');
+    //  });
   },
 
   logout: function logout() {
@@ -197,26 +202,26 @@ exports['default'] = _backbone2['default'].Router.extend({
   },
 
   homeView: function homeView() {
-    var _this2 = this;
+    var _this = this;
 
     _reactDom2['default'].render(_react2['default'].createElement(_viewsLogin2['default'], {
       onLoginClick: function () {
-        return _this2.login();
-      } }),
-    // onLogoutClick={() => this.logout()}/>,
-    document.querySelector('.app'));
+        return _this.login();
+      } }), document.querySelector('.app'));
   },
   dashboard: function dashboard() {
-    var _this3 = this;
+    var _this2 = this;
 
     this.setHeader();
     this.board.fetch().then(function () {
-      _this3.render(_react2['default'].createElement(_viewsDashboard2['default'], {
-        data: _this3.board.toJSON() }), document.querySelector('.app'));
+      _this2.render(_react2['default'].createElement(_viewsDashboard2['default'], {
+        data: _this2.board.toJSON() }));
     });
   }
 });
 module.exports = exports['default'];
+
+// document.querySelector('.app')
 
 },{"./deck_collections":1,"./views/add_card":5,"./views/dashboard":6,"./views/login":7,"backbone":8,"jquery":10,"js-cookie":11,"react":168,"react-dom":12}],5:[function(require,module,exports){
 'use strict';
@@ -507,7 +512,7 @@ exports['default'] = _react2['default'].createClass({
 					_react2['default'].createElement(
 						'label',
 						{ htmlFor: 'password' },
-						'Password: '
+						'Password:  '
 					),
 					_react2['default'].createElement('input', { type: 'password', className: 'password', id: 'password', ref: 'password', placeholder: 'Password' })
 				),
