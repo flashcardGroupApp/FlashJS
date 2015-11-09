@@ -135,22 +135,24 @@ exports['default'] = _backbone2['default'].Router.extend({
     _backbone2['default'].history.start();
   },
 
-  setHeader: function setHeader() {
-    var user = _jsCookie2['default'].get('user');
-    console.log(user);
-    if (user) {
-      var auth = JSON.parse(user).user.access_token;
-      console.log(auth);
-      _jquery2['default'].ajaxSetup({
-        headers: {
-          auth_token: data.auth_token
-        }
-      });
-      this.redirect('dashboard');
-    } else {
-      (0, _jquery2['default'])('.app').html(' Wrong email or password. Please, try again.');
-    };
-  },
+  // $('.app').html('loading...');
+
+  //     request.then((data) => {
+
+  //       console.log('data:', data);
+
+  //       Cookies.set('username', data);
+
+  //       $.ajaxSetup({
+  //         headers: {
+  //           auth_token: data.auth_token
+  //         }
+  //       });
+  //       this.redirect('dashboard');
+  //     }).fail(() => {
+  //       $('.app').html(' Wrong email or password. Please, try again.');
+  //     });
+
   redirect: function redirect(route) {
     this.navigate(route, {
       trigger: true,
@@ -159,6 +161,8 @@ exports['default'] = _backbone2['default'].Router.extend({
   },
 
   login: function login() {
+    var _this = this;
+
     var username = document.querySelector('.username').value;
     var password = document.querySelector('.password').value;
 
@@ -172,23 +176,23 @@ exports['default'] = _backbone2['default'].Router.extend({
       }
     });
 
-    // $('.app').html('loading...');
+    (0, _jquery2['default'])('.app').html('loading...');
 
-    // request.then((data) => {
+    request.then(function (data) {
 
-    //   console.log('data:', data);
+      console.log('data:', data);
 
-    //   Cookies.set('username', data);
+      _jsCookie2['default'].set('username', data);
 
-    //   $.ajaxSetup({
-    //     headers: {
-    //       auth_token: data.auth_token
-    //     }
-    //   });
-    //    this.redirect('dashboard');
-    //  }).fail(() => {
-    //    $('.app').html(' Wrong email or password. Please, try again.');
-    //  });
+      _jquery2['default'].ajaxSetup({
+        headers: {
+          auth_token: data.auth_token
+        }
+      });
+      _this.redirect('dashboard');
+    }).fail(function () {
+      (0, _jquery2['default'])('.app').html(' Wrong email or password. Please, try again.');
+    });
   },
 
   logout: function logout() {
@@ -201,27 +205,39 @@ exports['default'] = _backbone2['default'].Router.extend({
     this.redirect('');
   },
 
+  setHeader: function setHeader() {
+    var user = _jsCookie2['default'].get('user');
+    console.log(user);
+    if (user) {
+      var auth = JSON.parse(user).user.auth_token;
+      console.log(auth);
+      _jquery2['default'].ajaxSetup({
+        headers: {
+          auth_token: user.auth_token
+        }
+      });
+    }
+  },
+
   homeView: function homeView() {
-    var _this = this;
+    var _this2 = this;
 
     _reactDom2['default'].render(_react2['default'].createElement(_viewsLogin2['default'], {
       onLoginClick: function () {
-        return _this.login();
+        return _this2.login();
       } }), document.querySelector('.app'));
   },
   dashboard: function dashboard() {
-    var _this2 = this;
+    var _this3 = this;
 
     this.setHeader();
     this.board.fetch().then(function () {
-      _this2.render(_react2['default'].createElement(_viewsDashboard2['default'], {
-        data: _this2.board.toJSON() }));
+      _this3.render(_react2['default'].createElement(_viewsDashboard2['default'], {
+        data: _this3.board.toJSON() }), document.querySelector('.app'));
     });
   }
 });
 module.exports = exports['default'];
-
-// document.querySelector('.app')
 
 },{"./deck_collections":1,"./views/add_card":5,"./views/dashboard":6,"./views/login":7,"backbone":8,"jquery":10,"js-cookie":11,"react":168,"react-dom":12}],5:[function(require,module,exports){
 'use strict';
@@ -391,53 +407,26 @@ exports['default'] = _react2['default'].createClass({
   },
 
   render: function render(data) {
-    var _this2 = this;
-
     return _react2['default'].createElement(
-      'div',
-      { className: 'dashboard' },
-      _react2['default'].createElement(
-        'h1',
-        { className: 'your-decks' },
-        'Your Current Decks'
-      ),
-      '// ',
-      _react2['default'].createElement(
-        'div',
-        { className: 'decks' },
-        '//   ',
-        _react2['default'].createElement(
-          'ul',
-          { className: 'decks-list' },
-          '//     ',
-          this.props.data.map.getDeck,
-          '//     ',
-          _react2['default'].createElement(
-            'li',
-            { className: 'create-deck' },
-            '//       ',
-            _react2['default'].createElement(
-              'form',
-              { className: 'new-deck-form' },
-              '//         ',
-              _react2['default'].createElement('input', { className: 'new-deck-name', placeholder: 'Create a New Deck' }),
-              '//       '
-            ),
-            '//       ',
-            _react2['default'].createElement(
-              'button',
-              { className: 'new-deck-button', onClick: function () {
-                  return _this2.addHandler(data.id);
-                } },
-              '+'
-            ),
-            '//     '
-          ),
-          '//   '
-        ),
-        '// '
-      )
-    );
+      'p',
+      null,
+      'hi'
+    )
+    // <div className="dashboard">
+    //   <h1 className="your-decks">Your Current Decks</h1>
+    //   <div className="decks">
+    //     <ul className="decks-list">
+    //       {this.props.data.map.getDeck}
+    //       <li className="create-deck">
+    //         <form className="new-deck-form">
+    //           <input className="new-deck-name" placeholder="Create a New Deck"/>
+    //         </form>
+    //         <button className="new-deck-button" onClick={()=> this.addHandler(data.id)}>+</button>
+    //       </li>
+    //     </ul>
+    //   </div>
+    // </div>
+    ;
   }
 });
 
