@@ -17,7 +17,7 @@ var _deck_model2 = _interopRequireDefault(_deck_model);
 
 var DeckCollection = _backbone2['default'].Collection.extend({
 
-  url: 'http://secret-shore-7735.herokuapp.com/decks/:id',
+  url: 'http://secret-shore-7735.herokuapp.com/decks/',
   model: _deck_model2['default'],
   'function': function _function(data) {
     return data.results;
@@ -46,7 +46,7 @@ var _backbone2 = _interopRequireDefault(_backbone);
 
 var DeckModel = _backbone2['default'].Model.extend({
 
-	urlRoot: 'http://secret-shore-7735.herokuapp.com/decks/:id'
+	urlRoot: 'http://secret-shore-7735.herokuapp.com/decks/'
 	// idAttribute: ,
 
 });
@@ -206,14 +206,14 @@ exports['default'] = _backbone2['default'].Router.extend({
   },
 
   setHeader: function setHeader() {
-    var user = _jsCookie2['default'].get('user');
+    var user = _jsCookie2['default'].get('username');
     console.log(user);
     if (user) {
       var auth = JSON.parse(user).user.auth_token;
       console.log(auth);
       _jquery2['default'].ajaxSetup({
         headers: {
-          auth_token: user.auth_token
+          'Access-Token': auth
         }
       });
     }
@@ -232,8 +232,10 @@ exports['default'] = _backbone2['default'].Router.extend({
 
     this.setHeader();
     this.board.fetch().then(function () {
-      _this3.render(_react2['default'].createElement(_viewsDashboard2['default'], {
-        data: _this3.board.toJSON() }), document.querySelector('.app'));
+      // this.render(
+      _react2['default'].createElement(_viewsDashboard2['default'], {
+        data: _this3.board.toJSON() }), document.querySelector('.app');
+      // );
     });
   }
 });
@@ -407,26 +409,42 @@ exports['default'] = _react2['default'].createClass({
   },
 
   render: function render(data) {
+    var _this2 = this;
+
     return _react2['default'].createElement(
-      'p',
-      null,
-      'hi'
-    )
-    // <div className="dashboard">
-    //   <h1 className="your-decks">Your Current Decks</h1>
-    //   <div className="decks">
-    //     <ul className="decks-list">
-    //       {this.props.data.map.getDeck}
-    //       <li className="create-deck">
-    //         <form className="new-deck-form">
-    //           <input className="new-deck-name" placeholder="Create a New Deck"/>
-    //         </form>
-    //         <button className="new-deck-button" onClick={()=> this.addHandler(data.id)}>+</button>
-    //       </li>
-    //     </ul>
-    //   </div>
-    // </div>
-    ;
+      'div',
+      { className: 'dashboard' },
+      _react2['default'].createElement(
+        'h1',
+        { className: 'your-decks' },
+        'Your Current Decks'
+      ),
+      _react2['default'].createElement(
+        'div',
+        { className: 'decks' },
+        _react2['default'].createElement(
+          'ul',
+          { className: 'decks-list' },
+          this.props.data.map.getDeck,
+          _react2['default'].createElement(
+            'li',
+            { className: 'create-deck' },
+            _react2['default'].createElement(
+              'form',
+              { className: 'new-deck-form' },
+              _react2['default'].createElement('input', { className: 'new-deck-name', placeholder: 'Create a New Deck' })
+            ),
+            _react2['default'].createElement(
+              'button',
+              { className: 'new-deck-button', onClick: function () {
+                  return _this2.addHandler(data.id);
+                } },
+              '+'
+            )
+          )
+        )
+      )
+    );
   }
 });
 
@@ -455,10 +473,6 @@ var _jsCookie2 = _interopRequireDefault(_jsCookie);
 exports['default'] = _react2['default'].createClass({
 	displayName: 'login',
 
-	// getInitialState: function() {
-	//    return {username: "", password: ""}
-	//  },
-
 	submitHandler: function submitHandler(e) {
 		e.preventDefault();
 		this.props.onLoginClick();
@@ -476,38 +490,42 @@ exports['default'] = _react2['default'].createClass({
 
 		return _react2['default'].createElement(
 			'div',
-			{ className: 'login jumbotron center-block' },
+			{ className: 'login' },
 			_react2['default'].createElement(
-				'h1',
-				null,
-				'Login'
+				'div',
+				{ className: 'h1' },
+				_react2['default'].createElement(
+					'h1',
+					null,
+					'Login'
+				)
 			),
 			_react2['default'].createElement(
 				'form',
 				{ role: 'form' },
 				_react2['default'].createElement(
 					'div',
-					{ className: 'form-group' },
+					{ className: 'group' },
 					_react2['default'].createElement(
 						'label',
-						{ htmlFor: 'username' },
+						{ className: 'yep', htmlFor: 'username' },
 						'Username: '
 					),
 					_react2['default'].createElement('input', { type: 'text', className: 'username', id: 'username', placeholder: 'Username' })
 				),
 				_react2['default'].createElement(
 					'div',
-					{ className: 'form-group' },
+					{ className: 'form' },
 					_react2['default'].createElement(
 						'label',
-						{ htmlFor: 'password' },
+						{ className: 'yep', htmlFor: 'password' },
 						'Password:  '
 					),
 					_react2['default'].createElement('input', { type: 'password', className: 'password', id: 'password', ref: 'password', placeholder: 'Password' })
 				),
 				_react2['default'].createElement(
 					'button',
-					{ type: 'submit', onClick: this.submitHandler, className: 'btn btn-default' },
+					{ type: 'submit', onClick: this.submitHandler, className: 'btn' },
 					'Login'
 				)
 			)

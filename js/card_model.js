@@ -6,7 +6,7 @@ import Backbone from 'backbone';
 
 const CardModel = Backbone.Model.extend({
 
-  // urlRoot: ,
+  url: 'http://secret-shore-7735.herokuapp.com/decks/' 
   // idAttribute: ,
 
 });

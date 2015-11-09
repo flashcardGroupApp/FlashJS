@@ -100,14 +100,14 @@ initialize: function(appElement) {
 	},
 
   setHeader(){
-    let user = Cookies.get('user');
+    let user = Cookies.get('username');
     console.log(user);
     if (user) {
       let auth = JSON.parse(user).user.auth_token;
       console.log(auth);
       $.ajaxSetup({
         headers: {
-          auth_token: user.auth_token
+         'Access-Token': auth
         }
       });
     }
@@ -123,11 +123,11 @@ initialize: function(appElement) {
   dashboard(){
     this.setHeader();
     this.board.fetch().then(() => {
-      this.render(
+      // this.render(
         <DashboardTemplate
         data={this.board.toJSON()}/>,
       document.querySelector('.app')
-        );
+        // );
     });
 
   }

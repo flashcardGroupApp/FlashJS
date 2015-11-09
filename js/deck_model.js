@@ -5,7 +5,7 @@ import Backbone from 'backbone';
 
 const DeckModel = Backbone.Model.extend({
 
-	  urlRoot: 'http://secret-shore-7735.herokuapp.com/decks/:id'
+	  urlRoot: 'http://secret-shore-7735.herokuapp.com/decks/'
 	  // idAttribute: ,
 
 });
