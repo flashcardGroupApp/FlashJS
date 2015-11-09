@@ -17,7 +17,7 @@ var _deck_model2 = _interopRequireDefault(_deck_model);
 
 var DeckCollection = _backbone2['default'].Collection.extend({
 
-  url: 'http://secret-shore-7735.herokuapp.com/decks/:id',
+  url: 'http://secret-shore-7735.herokuapp.com/decks/',
   model: _deck_model2['default'],
   'function': function _function(data) {
     return data.results;
@@ -46,7 +46,7 @@ var _backbone2 = _interopRequireDefault(_backbone);
 
 var DeckModel = _backbone2['default'].Model.extend({
 
-	urlRoot: 'http://secret-shore-7735.herokuapp.com/decks/:id'
+	urlRoot: 'http://secret-shore-7735.herokuapp.com/decks/'
 	// idAttribute: ,
 
 });
@@ -135,22 +135,24 @@ exports['default'] = _backbone2['default'].Router.extend({
     _backbone2['default'].history.start();
   },
 
-  setHeader: function setHeader() {
-    var user = _jsCookie2['default'].get('user');
-    console.log(user);
-    if (user) {
-      var auth = JSON.parse(user).user.access_token;
-      console.log(auth);
-      _jquery2['default'].ajaxSetup({
-        headers: {
-          auth_token: data.auth_token
-        }
-      });
-      this.redirect('dashboard');
-    } else {
-      (0, _jquery2['default'])('.app').html(' Wrong email or password. Please, try again.');
-    };
-  },
+  // $('.app').html('loading...');
+
+  //     request.then((data) => {
+
+  //       console.log('data:', data);
+
+  //       Cookies.set('username', data);
+
+  //       $.ajaxSetup({
+  //         headers: {
+  //           auth_token: data.auth_token
+  //         }
+  //       });
+  //       this.redirect('dashboard');
+  //     }).fail(() => {
+  //       $('.app').html(' Wrong email or password. Please, try again.');
+  //     });
+
   redirect: function redirect(route) {
     this.navigate(route, {
       trigger: true,
@@ -159,6 +161,8 @@ exports['default'] = _backbone2['default'].Router.extend({
   },
 
   login: function login() {
+    var _this = this;
+
     var username = document.querySelector('.username').value;
     var password = document.querySelector('.password').value;
 
@@ -172,23 +176,23 @@ exports['default'] = _backbone2['default'].Router.extend({
       }
     });
 
-    // $('.app').html('loading...');
+    (0, _jquery2['default'])('.app').html('loading...');
 
-    // request.then((data) => {
+    request.then(function (data) {
 
-    //   console.log('data:', data);
+      console.log('data:', data);
 
-    //   Cookies.set('username', data);
+      _jsCookie2['default'].set('username', data);
 
-    //   $.ajaxSetup({
-    //     headers: {
-    //       auth_token: data.auth_token
-    //     }
-    //   });
-    //    this.redirect('dashboard');
-    //  }).fail(() => {
-    //    $('.app').html(' Wrong email or password. Please, try again.');
-    //  });
+      _jquery2['default'].ajaxSetup({
+        headers: {
+          auth_token: data.auth_token
+        }
+      });
+      _this.redirect('dashboard');
+    }).fail(function () {
+      (0, _jquery2['default'])('.app').html(' Wrong email or password. Please, try again.');
+    });
   },
 
   logout: function logout() {
@@ -201,27 +205,41 @@ exports['default'] = _backbone2['default'].Router.extend({
     this.redirect('');
   },
 
+  setHeader: function setHeader() {
+    var user = _jsCookie2['default'].get('username');
+    console.log(user);
+    if (user) {
+      var auth = JSON.parse(user).user.auth_token;
+      console.log(auth);
+      _jquery2['default'].ajaxSetup({
+        headers: {
+          'Access-Token': auth
+        }
+      });
+    }
+  },
+
   homeView: function homeView() {
-    var _this = this;
+    var _this2 = this;
 
     _reactDom2['default'].render(_react2['default'].createElement(_viewsLogin2['default'], {
       onLoginClick: function () {
-        return _this.login();
+        return _this2.login();
       } }), document.querySelector('.app'));
   },
   dashboard: function dashboard() {
-    var _this2 = this;
+    var _this3 = this;
 
     this.setHeader();
     this.board.fetch().then(function () {
-      _this2.render(_react2['default'].createElement(_viewsDashboard2['default'], {
-        data: _this2.board.toJSON() }));
+      // this.render(
+      _react2['default'].createElement(_viewsDashboard2['default'], {
+        data: _this3.board.toJSON() }), document.querySelector('.app');
+      // );
     });
   }
 });
 module.exports = exports['default'];
-
-// document.querySelector('.app')
 
 },{"./deck_collections":1,"./views/add_card":5,"./views/dashboard":6,"./views/login":7,"backbone":8,"jquery":10,"js-cookie":11,"react":168,"react-dom":12}],5:[function(require,module,exports){
 'use strict';
@@ -401,41 +419,30 @@ exports['default'] = _react2['default'].createClass({
         { className: 'your-decks' },
         'Your Current Decks'
       ),
-      '// ',
       _react2['default'].createElement(
         'div',
         { className: 'decks' },
-        '//   ',
         _react2['default'].createElement(
           'ul',
           { className: 'decks-list' },
-          '//     ',
           this.props.data.map.getDeck,
-          '//     ',
           _react2['default'].createElement(
             'li',
             { className: 'create-deck' },
-            '//       ',
             _react2['default'].createElement(
               'form',
               { className: 'new-deck-form' },
-              '//         ',
-              _react2['default'].createElement('input', { className: 'new-deck-name', placeholder: 'Create a New Deck' }),
-              '//       '
+              _react2['default'].createElement('input', { className: 'new-deck-name', placeholder: 'Create a New Deck' })
             ),
-            '//       ',
             _react2['default'].createElement(
               'button',
               { className: 'new-deck-button', onClick: function () {
                   return _this2.addHandler(data.id);
                 } },
               '+'
-            ),
-            '//     '
-          ),
-          '//   '
-        ),
-        '// '
+            )
+          )
+        )
       )
     );
   }
@@ -466,10 +473,6 @@ var _jsCookie2 = _interopRequireDefault(_jsCookie);
 exports['default'] = _react2['default'].createClass({
 	displayName: 'login',
 
-	// getInitialState: function() {
-	//    return {username: "", password: ""}
-	//  },
-
 	submitHandler: function submitHandler(e) {
 		e.preventDefault();
 		this.props.onLoginClick();
@@ -487,38 +490,42 @@ exports['default'] = _react2['default'].createClass({
 
 		return _react2['default'].createElement(
 			'div',
-			{ className: 'login jumbotron center-block' },
+			{ className: 'login' },
 			_react2['default'].createElement(
-				'h1',
-				null,
-				'Login'
+				'div',
+				{ className: 'h1' },
+				_react2['default'].createElement(
+					'h1',
+					null,
+					'Login'
+				)
 			),
 			_react2['default'].createElement(
 				'form',
 				{ role: 'form' },
 				_react2['default'].createElement(
 					'div',
-					{ className: 'form-group' },
+					{ className: 'group' },
 					_react2['default'].createElement(
 						'label',
-						{ htmlFor: 'username' },
+						{ className: 'yep', htmlFor: 'username' },
 						'Username: '
 					),
 					_react2['default'].createElement('input', { type: 'text', className: 'username', id: 'username', placeholder: 'Username' })
 				),
 				_react2['default'].createElement(
 					'div',
-					{ className: 'form-group' },
+					{ className: 'form' },
 					_react2['default'].createElement(
 						'label',
-						{ htmlFor: 'password' },
+						{ className: 'yep', htmlFor: 'password' },
 						'Password:  '
 					),
 					_react2['default'].createElement('input', { type: 'password', className: 'password', id: 'password', ref: 'password', placeholder: 'Password' })
 				),
 				_react2['default'].createElement(
 					'button',
-					{ type: 'submit', onClick: this.submitHandler, className: 'btn btn-default' },
+					{ type: 'submit', onClick: this.submitHandler, className: 'btn' },
 					'Login'
 				)
 			)

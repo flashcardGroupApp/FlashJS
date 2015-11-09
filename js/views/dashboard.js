@@ -44,17 +44,17 @@ export default React.createClass({
     return(
       <div className="dashboard">
         <h1 className="your-decks">Your Current Decks</h1>
-        // <div className="decks">
-        //   <ul className="decks-list">
-        //     {this.props.data.map.getDeck}
-        //     <li className="create-deck">
-        //       <form className="new-deck-form">
-        //         <input className="new-deck-name" placeholder="Create a New Deck"/>
-        //       </form>
-        //       <button className="new-deck-button" onClick={()=> this.addHandler(data.id)}>+</button>
-        //     </li>
-        //   </ul>
-        // </div>
+        <div className="decks">
+          <ul className="decks-list">
+            {this.props.data.map.getDeck}
+            <li className="create-deck">
+              <form className="new-deck-form">
+                <input className="new-deck-name" placeholder="Create a New Deck"/>
+              </form>
+              <button className="new-deck-button" onClick={()=> this.addHandler(data.id)}>+</button>
+            </li>
+          </ul>
+        </div>
       </div>
     );
   }

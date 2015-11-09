@@ -30,22 +30,24 @@ initialize: function(appElement) {
 		Backbone.history.start();
 	},
 
-setHeader(){
-    let user = Cookies.get('user');
-    console.log(user);
-    if (user) {
-      let auth = JSON.parse(user).user.access_token;
-      console.log(auth);
-      $.ajaxSetup({
-        headers: {
-          auth_token: data.auth_token
-        }
-      });
-       this.redirect('dashboard');
-    }else {
-      $('.app').html(' Wrong email or password. Please, try again.')
-  };
-},
+// $('.app').html('loading...');
+
+//     request.then((data) => {
+
+//       console.log('data:', data);
+
+//       Cookies.set('username', data);
+
+//       $.ajaxSetup({
+//         headers: {
+//           auth_token: data.auth_token
+//         }
+//       });
+//       this.redirect('dashboard');
+//     }).fail(() => {
+//       $('.app').html(' Wrong email or password. Please, try again.');
+//     });
+
 	redirect(route) {
 		this.navigate(route, {
 			trigger: true,
@@ -67,23 +69,23 @@ setHeader(){
       }
     });
 
-    // $('.app').html('loading...');
+    $('.app').html('loading...');
 
-    // request.then((data) => {
+    request.then((data) => {
 
-    //   console.log('data:', data);
+      console.log('data:', data);
 
-    //   Cookies.set('username', data);
+      Cookies.set('username', data);
 
-    //   $.ajaxSetup({
-    //     headers: {
-    //       auth_token: data.auth_token
-    //     }
-    //   });
-   //    this.redirect('dashboard');
-   //  }).fail(() => {
-   //    $('.app').html(' Wrong email or password. Please, try again.');
-   //  });
+      $.ajaxSetup({
+        headers: {
+          auth_token: data.auth_token
+        }
+      });
+      this.redirect('dashboard');
+    }).fail(() => {
+      $('.app').html(' Wrong email or password. Please, try again.');
+    });
    },
 
 
@@ -97,6 +99,20 @@ setHeader(){
     this.redirect('');
 	},
 
+  setHeader(){
+    let user = Cookies.get('username');
+    console.log(user);
+    if (user) {
+      let auth = JSON.parse(user).user.auth_token;
+      console.log(auth);
+      $.ajaxSetup({
+        headers: {
+         'Access-Token': auth
+        }
+      });
+    }
+  },
+
 	homeView(){
 		ReactDom.render(
 			<LoginTemplate
@@ -107,11 +123,11 @@ setHeader(){
   dashboard(){
     this.setHeader();
     this.board.fetch().then(() => {
-      this.render(
+      // this.render(
         <DashboardTemplate
         data={this.board.toJSON()}/>,
-      // document.querySelector('.app')
-        );
+      document.querySelector('.app')
+        // );
     });
 
   }

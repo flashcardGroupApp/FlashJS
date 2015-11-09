@@ -3,5 +3,42 @@
 @import "font-awesome";
 
 body {
-  background: #e2ebf3;
+  background-image: url(../images/hermes.jpg);
+  
+}
+
+.login{
+	position: relative;
+	border: 1px solid black;
+	width: 327px;
+	left: 552px;
+  top: 280px;
+  height: 200px;
+  background-color: #483523;
+}
+
+.h1{
+	position: relative;
+	left: 110px;
+	color: #EFC864;
+}
+
+.btn{
+	position: relative;
+	top: 38px;
+  left: 127px;
+}
+
+.yep{
+	color: #EFC864;
+}
+
+.form{
+	position: relative;
+	top: 10px;
+  left: 5px;
+}
+.group{
+	position: relative;
+	left: 2px;
 }
